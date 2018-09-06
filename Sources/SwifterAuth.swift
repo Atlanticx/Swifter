@@ -99,9 +99,19 @@ public extension Swifter {
                 requestToken.verifier = parameters["oauth_verifier"]
                 
                 self.postOAuthAccessToken(with: requestToken, success: { accessToken, response in
+                    if let observationToken = self.observationToken {
+                        NotificationCenter.default.removeObserver(observationToken)
+                    }
+                    
                     self.client.credential = Credential(accessToken: accessToken!)
                     success?(accessToken!, response)
-                    }, failure: failure)
+                }, failure: { error in
+                    if let observationToken = self.observationToken {
+                        NotificationCenter.default.removeObserver(observationToken)
+                    }
+                    
+                    failure?(error)
+                })
             }
 			
 			let forceLogin = forceLogin ? "&force_login=true" : ""
