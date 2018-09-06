@@ -83,7 +83,11 @@ public extension Swifter {
 						  safariDelegate: SFSafariViewControllerDelegate? = nil,
 						  success: TokenSuccessHandler?,
 						  failure: FailureHandler? = nil) {
-        NotificationCenter.default.removeObserver(observationToken!)
+
+        if let observationToken = observationToken {
+            NotificationCenter.default.removeObserver(observationToken)
+        }
+
         self.postOAuthRequestToken(with: callbackURL, success: { token, response in
             var requestToken = token!
             self.observationToken = NotificationCenter.default.addObserver(forName: .swifterCallback, object: nil, queue: .main) { notification in
