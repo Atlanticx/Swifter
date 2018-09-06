@@ -106,6 +106,7 @@ public class Swifter {
     
     public var client: SwifterClientProtocol
     private var chunkBuffer: String?
+    var observationToken: NSObjectProtocol?
 
     // MARK: - Initializers
     

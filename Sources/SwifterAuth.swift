@@ -83,9 +83,10 @@ public extension Swifter {
 						  safariDelegate: SFSafariViewControllerDelegate? = nil,
 						  success: TokenSuccessHandler?,
 						  failure: FailureHandler? = nil) {
+        NotificationCenter.default.removeObserver(observationToken!)
         self.postOAuthRequestToken(with: callbackURL, success: { token, response in
             var requestToken = token!
-            NotificationCenter.default.addObserver(forName: .swifterCallback, object: nil, queue: .main) { notification in
+            self.observationToken = NotificationCenter.default.addObserver(forName: .swifterCallback, object: nil, queue: .main) { notification in
                 NotificationCenter.default.removeObserver(self)
                 presenting?.presentedViewController?.dismiss(animated: true, completion: nil)
                 let url = notification.userInfo![CallbackNotification.optionsURLKey] as! URL
